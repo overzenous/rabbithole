@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111111">
+<title>the rabbit hole — personal web directory</title>
+<style>
+:root{--bg:#101010;--panel:#181818;--panel2:#202020;--ink:#ecebe6;--muted:#a6a49d;--line:#393936;--accent:#d7d3c8;--green:#a7c5a2}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.11;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E")}
+a{color:inherit}.wrap{max-width:1180px;margin:auto;padding:34px 22px 70px;position:relative}
+header{border-bottom:1px solid var(--line);padding:20px 0 28px;margin-bottom:24px}
+.kicker,.eyebrow{font:11px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(38px,7vw,76px);letter-spacing:-.075em;line-height:.9;margin:16px 0 14px;font-weight:850}
+h1 span{color:var(--muted);font-weight:300}
+.intro{max-width:650px;color:#c2c0b8;margin:0;font-size:15px}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.status{border:1px solid var(--line);padding:6px 10px;font:11px ui-monospace,monospace;color:var(--muted)}
+.toolbar{display:grid;grid-template-columns:minmax(220px,1fr) auto;gap:12px;margin:22px 0 14px}
+input[type=search]{width:100%;background:#171717;border:1px solid var(--line);border-radius:0;padding:13px 14px;color:var(--ink);font:inherit;outline:none}
+input[type=search]:focus{border-color:#aaa}
+.filters{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 25px}
+button{background:transparent;color:var(--muted);border:1px solid var(--line);padding:8px 11px;font:11px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;cursor:pointer}
+button:hover,button.active{background:var(--ink);color:#111;border-color:var(--ink)}
+.section{margin:32px 0}
+.section-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:9px;margin-bottom:13px;gap:12px}
+h2{font-size:18px;letter-spacing:-.03em;margin:0;font-weight:700}
+.count{font:11px ui-monospace,monospace;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:9px}
+.card{background:linear-gradient(145deg,var(--panel),#151515);border:1px solid var(--line);padding:15px;min-height:150px;display:flex;flex-direction:column;transition:border-color .15s,transform .15s}
+.card:hover{border-color:#777;transform:translateY(-2px)}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tag{font:10px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.star{border:0;padding:2px 5px;font-size:18px;line-height:1;color:#777}
+.star.saved{color:#e9d78a}
+.card h3{font-size:17px;line-height:1.2;margin:12px 0 7px;letter-spacing:-.03em}
+.card p{font-size:12px;color:#b0aea7;margin:0 0 13px}
+.card-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto}
+.card a{font:11px ui-monospace,monospace;text-decoration:none;border-bottom:1px solid #777;padding-bottom:2px}
+.card a:hover{color:#fff;border-color:#fff}
+.host{font:9px ui-monospace,monospace;color:#89877f;text-transform:uppercase}
+.note{border:1px solid var(--line);padding:15px 17px;color:var(--muted);font-size:12px;margin-top:30px}
+.note strong{color:var(--ink)}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;color:var(--muted);font:10px ui-monospace,monospace;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.empty{color:var(--muted);padding:28px;border:1px dashed var(--line);text-align:center;display:none}
+@media(max-width:650px){.toolbar{grid-template-columns:1fr}.wrap{padding:24px 15px 50px}.grid{grid-template-columns:1fr}.card{min-height:130px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="topline"><div class="kicker">personal index / issue 001</div><div class="status">NO ACCOUNT REQUIRED · MOSTLY BROWSER-BASED</div></div>
+  <h1>the rabbit hole<span>.</span></h1>
+  <p class="intro">A hand-picked directory of browser games, strange experiments, creative tools, simulations and useful corners of the internet. Search it, star the good stuff, and keep wandering.</p>
+</header>
+<div class="toolbar">
+  <input id="search" type="search" placeholder="Search titles, descriptions, tags… ( / )" autocomplete="off">
+  <button id="savedOnly" type="button">★ saved only</button>
+</div>
+<nav class="filters" id="filters" aria-label="Filter by category"></nav>
+<div id="sections"></div>
+<div class="empty" id="empty">Nothing here under that search. Try another word or category.</div>
+<div class="note"><strong>Small print.</strong> This is a link directory, not a proxy or content mirror. Some sites embed third-party assets, use external services, or may be blocked by a network policy even when their homepage is on <code>github.io</code>. Only use personal sites and services on managed devices where your workplace permits them. Don't enter work credentials or sensitive information into unfamiliar tools.</div>
+<footer><span>THE RABBIT HOLE / BUILT TO BE EDITED</span><span>LOCAL FAVOURITES ARE SAVED IN THIS BROWSER</span></footer>
+</div>
+<script>
+const entries = [
+{cat:"Games",name:"UBGHyper",url:"https://ubghyper.github.io/",desc:"A huge hand-curated browser-game catalogue. Includes embedded games and third-party content; check workplace rules before using.",tags:"arcade browser games html5"},
+{cat:"Games",name:"OpenGames",url:"https://opengames-dev.github.io/",desc:"Six small, polished games: maze, snake, memory, whac-a-mole, flap and blocks. No account, ads or tracking claimed.",tags:"snake puzzle casual no login"},
+{cat:"Games",name:"BORKADE",url:"https://leobalkind.github.io/",desc:"Pixel-art browser arcade with a growing set of 2D and 3D games. Local profiles; optional cloud sync is mentioned.",tags:"pixel art arcade 3d"},
+{cat:"Games",name:"Games Hub — 140+",url:"https://sausi-7.github.io/games/",desc:"A big collection of browser games across arcade, puzzle, shooter and platformer categories.",tags:"large collection html5"},
+{cat:"Games",name:"Weird & Wacky Arcade",url:"https://fffej.github.io/llm-arcade/",desc:"Ten browser-playable arcade games plus the design specs behind them.",tags:"arcade experimental"},
+{cat:"Games",name:"RageByters",url:"https://ragebyters.github.io/",desc:"A bite-sized arcade hub linking to small single-player games.",tags:"mini games arcade"},
+{cat:"Games",name:"Board Gaming Hub",url:"https://mf4633.github.io/board-gaming/",desc:"Original strategy games and classics including chess, Go, solitaire, Sudoku and simulations. Some pages include ads.",tags:"board strategy puzzle simulation"},
+{cat:"Games",name:"jdh8's Arcade",url:"https://jdh8.github.io/",desc:"Card and tabletop games including gin rummy, poker trainer, blackjack, Yahtzee and Hearts.",tags:"cards tabletop"},
+{cat:"Games",name:"Free Unblocked Games",url:"https://freeunblockedgames.github.io/",desc:"An older collection of browser classics such as Pac-Man, 2048, BrowserQuest and HexGL. Availability may vary.",tags:"retro arcade classics"},
+{cat:"Games",name:"Awesome Decomp Games",url:"https://submitgame.github.io/awesome-decomp-games/",desc:"A catalogue of open-source game recreations, including a subset playable in-browser. Some require files from a game you own.",tags:"game preservation open source"},
+{cat:"Games",name:"3D.city",url:"https://lo-th.github.io/3d.city/index.html",desc:"A browser-based 3D city-building experiment. Best on a capable desktop browser.",tags:"3d city builder sandbox"},
+{cat:"Science & Simulations",name:"PhysicsHub",url:"https://physicshub.github.io/",desc:"Eighteen interactive physics simulations covering gravity, vectors, oscillations, orbits and more.",tags:"physics learning simulations"},
+{cat:"Science & Simulations",name:"All-Science Sims",url:"https://halosims-agent.github.io/",desc:"A searchable library of interactive simulations across physics, chemistry, biology, earth science, maths and more.",tags:"science simulations interactive"},
+{cat:"Science & Simulations",name:"Universe Sim",url:"https://mateusbrta.github.io/",desc:"An interactive N-body gravity simulator with planets, moons, stars, black holes and orbital controls.",tags:"space astronomy gravity 3d"},
+{cat:"Science & Simulations",name:"IDEA LAB Physics",url:"https://ideahubdot.github.io/idealabdot.github.io/",desc:"Interactive wave, optics and mechanics experiments with adjustable parameters.",tags:"physics waves optics mechanics"},
+{cat:"Science & Simulations",name:"Physics 3D Interactive",url:"https://online3d.github.io/welcome/",desc:"3D explainers and interactive models for optics, circular motion and electromagnetism.",tags:"3d physics education"},
+{cat:"Science & Simulations",name:"Falstad Circuit Simulator",url:"https://falstad.com/circuit/",desc:"A classic interactive electronic circuit simulator. Not hosted on GitHub Pages.",tags:"electronics circuits engineering"},
+{cat:"Science & Simulations",name:"PhET Interactive Simulations",url:"https://phet.colorado.edu/",desc:"Excellent interactive science and maths simulations from the University of Colorado. Not GitHub-hosted.",tags:"science maths chemistry physics"},
+{cat:"Science & Simulations",name:"NASA Eyes",url:"https://eyes.nasa.gov/",desc:"Explore spacecraft, planets and missions in interactive 3D. Not GitHub-hosted.",tags:"nasa space astronomy"},
+{cat:"Design & Creative",name:"Image-to-Pixel",url:"https://tezumie.github.io/Image-to-Pixel/",desc:"Turn images and video into pixel art with dithering, palettes, sprite sheets and exports. Processing is in-browser.",tags:"pixel art image video editor"},
+{cat:"Design & Creative",name:"Brushwork",url:"https://brushwork.pages.dev/",desc:"A browser-based drawing and painting tool. Hosted on Pages.dev rather than github.io; test access on your network.",tags:"drawing painting creative"},
+{cat:"Design & Creative",name:"fffuel",url:"https://www.fffuel.co/",desc:"A deep toolbox of SVG generators for textures, gradients, patterns, shapes and backgrounds. Not GitHub-hosted.",tags:"svg design textures generators"},
+{cat:"Design & Creative",name:"Photopea",url:"https://www.photopea.com/",desc:"A capable browser image editor that can open PSDs and many other formats. Not GitHub-hosted.",tags:"photoshop psd image editor"},
+{cat:"Design & Creative",name:"tldraw",url:"https://www.tldraw.com/",desc:"A clean infinite canvas for sketching, diagrams and visual thinking. Not GitHub-hosted.",tags:"whiteboard drawing diagrams"},
+{cat:"Learning & Code",name:"Mike Bertin — Interactive Explainers",url:"https://mikebertin.github.io/",desc:"From-scratch interactive builds covering cryptography, language models, operating systems, computer vision, space and physics.",tags:"programming computer science explainers"},
+{cat:"Learning & Code",name:"Creative Coding Lab",url:"https://vzdelavaci-portal.github.io/creative-coding-lab/",desc:"Small interactive projects exploring fractals, generative art, particle systems and mathematical visuals.",tags:"creative coding javascript generative art"},
+{cat:"Learning & Code",name:"DevTut",url:"https://devtut.github.io/",desc:"A broad, reference-style collection of programming and development tutorials. GitHub Pages project.",tags:"programming tutorials reference"},
+{cat:"Learning & Code",name:"Microsoft Web Dev for Beginners",url:"https://microsoft.github.io/Web-Dev-For-Beginners/",desc:"A structured beginner curriculum for learning web development through projects.",tags:"html css javascript curriculum"},
+{cat:"Productivity & Tools",name:"Compoundator",url:"https://nightswimmer.github.io/Compoundator/web/",desc:"A compound-interest calculator for exploring long-term growth scenarios. Verify the address and calculations before relying on it.",tags:"finance calculator investing"},
+{cat:"Productivity & Tools",name:"Calculator Soup",url:"https://www.calculatorsoup.com/",desc:"A large collection of practical calculators for maths, conversions and everyday tasks. Not GitHub-hosted.",tags:"calculator maths conversion"},
+{cat:"Productivity & Tools",name:"Calculator.net",url:"https://www.calculator.net/",desc:"Quick calculators for finance, health, maths and everyday planning. Not GitHub-hosted.",tags:"calculator finance planning"},
+{cat:"Writing & Reading",name:"Software Engineering Book",url:"https://github.com/lorabv/Software-Engineering-Book",desc:"An open-source software engineering learning resource hosted on GitHub. This link opens the repository, not a Pages site.",tags:"software engineering reading book"}
+];
+const cats=["All",...new Set(entries.map(x=>x.cat))];
+let category="All", savedOnly=false;
+const saved=new Set(JSON.parse(localStorage.getItem("rabbit-hole-saved")||"[]"));
+const filters=document.getElementById("filters"), sections=document.getElementById("sections"), search=document.getElementById("search"), empty=document.getElementById("empty");
+function renderFilters(){filters.innerHTML="";cats.forEach(c=>{const b=document.createElement("button");b.textContent=c;b.className=c===category?"active":"";b.onclick=()=>{category=c;renderFilters();render()};filters.appendChild(b)})}
+function render(){
+ const q=search.value.trim().toLowerCase();sections.innerHTML="";let total=0;
+ cats.slice(1).forEach(cat=>{
+  if(category!=="All"&&category!==cat)return;
+  const matches=entries.filter(e=>e.cat===cat&&(!savedOnly||saved.has(e.name))&&(!q||(e.name+" "+e.desc+" "+e.tags).toLowerCase().includes(q)));
+  if(!matches.length)return;total+=matches.length;
+  const section=document.createElement("section");section.className="section";
+  const head=document.createElement("div");head.className="section-head";
+  const h=document.createElement("h2");h.textContent=cat;
+  const count=document.createElement("span");count.className="count";count.textContent=String(matches.length).padStart(2,"0")+" LINKS";
+  head.append(h,count);section.appendChild(head);
+  const grid=document.createElement("div");grid.className="grid";
+  matches.forEach(e=>{
+   const card=document.createElement("article");card.className="card";
+   const top=document.createElement("div");top.className="card-top";
+   const tag=document.createElement("span");tag.className="tag";tag.textContent=e.tags.split(" ").slice(0,3).join(" / ");
+   const star=document.createElement("button");star.className="star"+(saved.has(e.name)?" saved":"");star.textContent=saved.has(e.name)?"★":"☆";star.title="Save favourite";star.setAttribute("aria-label","Toggle favourite");
+   star.onclick=()=>{saved.has(e.name)?saved.delete(e.name):saved.add(e.name);localStorage.setItem("rabbit-hole-saved",JSON.stringify([...saved]));render()};
+   top.append(tag,star);
+   const title=document.createElement("h3");title.textContent=e.name;
+   const desc=document.createElement("p");desc.textContent=e.desc;
+   const foot=document.createElement("div");foot.className="card-foot";
+   const link=document.createElement("a");link.href=e.url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="OPEN SITE ↗";
+   const host=document.createElement("span");host.className="host";host.textContent=e.url.includes("github.io")?"GITHUB PAGES":e.url.includes("pages.dev")?"PAGES.DEV":"OTHER HOST";
+   foot.append(link,host);card.append(top,title,desc,foot);grid.appendChild(card);
+  });
+  section.appendChild(grid);sections.appendChild(section);
+ });
+ empty.style.display=total?"none":"block";
+}
+search.addEventListener("input",render);
+document.getElementById("savedOnly").onclick=e=>{savedOnly=!savedOnly;e.currentTarget.classList.toggle("active",savedOnly);render()};
+document.addEventListener("keydown",e=>{if(e.key==="/"&&document.activeElement!==search){e.preventDefault();search.focus()}if(e.key==="Escape"){search.value="";search.blur();render()}});
+renderFilters();render();
+</script>
+</body>
+</html>
